@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-    @Query("SELECT t FROM Task t join Employee e on t.id=?1")
+    @Query("SELECT t FROM Task t join Employee e on e.id=t.id where e.id=?1")
     List<Task> findAllTaskByEmployeeId(Integer id);
 }
