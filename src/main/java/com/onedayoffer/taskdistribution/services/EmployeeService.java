@@ -52,8 +52,13 @@ public class EmployeeService {
             throw new IllegalArgumentException("Employee id cannot be null or a negative number!");
         }
         var employee = employeeRepository.findById(id);
-        Type listType = new TypeToken<EmployeeDTO>() {}.getType();
-        return modelMapper.map(employee.get(), listType);
+        if (employee.isPresent()) {
+            log.info("Employee is found!");
+            Type listType = new TypeToken<EmployeeDTO>() {
+            }.getType();
+            return modelMapper.map(employee.get(), listType);
+        }
+        return null;
     }
 
     public List<TaskDTO> getTasksByEmployeeId(Integer id) {
