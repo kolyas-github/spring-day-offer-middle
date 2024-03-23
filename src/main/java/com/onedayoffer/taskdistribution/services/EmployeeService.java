@@ -65,7 +65,8 @@ public class EmployeeService {
         if (Objects.isNull(id) || id < 0) {
             throw new IllegalArgumentException("Task id cannot be null or a negative number!");
         }
-        List<Task> tasks = taskRepository.findAllTaskByEmployeeId(id);
+        Optional<Employee> employee = employeeRepository.findById(id);
+        List<Task> tasks = employee.get().getTasks();
         Type listType = new TypeToken<List<TaskDTO>>() {}.getType();
         return modelMapper.map(tasks, listType);
     }
@@ -84,8 +85,11 @@ public class EmployeeService {
 
     @Transactional
     public void postNewTask(Integer employeeId, TaskDTO newTask) {
-        Type taskType = new TypeToken<TaskDTO>() {}.getType();
+
+        Employee employee = employeeRepository.findById(employeeId).get();
+        Type taskType = new TypeToken<Task>() {}.getType();
         Task taskEntity = modelMapper.map(newTask, taskType);
-        taskRepository.saveAndFlush(taskEntity);
+        employee.addTask(taskEntity);
+        employeeRepository.saveAndFlush(employee);
     }
 }
