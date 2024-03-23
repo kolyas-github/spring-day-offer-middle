@@ -48,12 +48,12 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeDTO getOneEmployee(Integer id) {
-        if (Objects.isNull(id) || id < 0) {
+        if (Objects.isNull(id)) {
             throw new IllegalArgumentException("Employee id cannot be null or a negative number!");
         }
-        var employees = employeeRepository.findById(id);
-        Type listType = new TypeToken<List<EmployeeDTO>>() {}.getType();
-        return modelMapper.map(employees, listType);
+        var employee = employeeRepository.findById(id);
+        Type listType = new TypeToken<EmployeeDTO>() {}.getType();
+        return modelMapper.map(employee.get(), listType);
     }
 
     public List<TaskDTO> getTasksByEmployeeId(Integer id) {
